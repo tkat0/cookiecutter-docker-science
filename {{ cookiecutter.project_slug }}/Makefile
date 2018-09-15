@@ -67,7 +67,7 @@ sync-from-source: ## download data data source to local envrionment
 {% endif %}
 
 init-docker: ## initialize docker image
-	$(DOCKER) build -t $(IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
+	$(DOCKER) build -t $(IMAGE_NAME) -f $(DOCKERFILE) .
 
 sync-to-source: ## sync local data to data source
 {%- if cookiecutter.data_source_type == 's3' %}
@@ -79,7 +79,7 @@ sync-to-source: ## sync local data to data source
 {% endif %}
 
 create-container: ## create docker container
-	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
+	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) -e UID=$(shell id -u) --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
 start-container: ## start docker container
 	@echo "$$START_DOCKER_CONTAINER" | $(SHELL)

@@ -5,6 +5,7 @@ FROM ubuntu:16.04
 {%- endif %}
 
 RUN apt-get update && apt-get install -y \
+  gosu \
   git \
   python3.5 \
   python3-pip \
@@ -15,10 +16,9 @@ RUN pip3 install --upgrade pip
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
-ARG UID
-RUN useradd docker -u $UID -s /bin/bash -m
-USER docker
-
 WORKDIR /work
 
-ENTRYPOINT ["/bin/bash"]
+COPY ./docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
